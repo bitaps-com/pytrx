@@ -1,5 +1,5 @@
-from bip39_mnemonic import generate_entropy
-from encode import *
+from .bip39_mnemonic import generate_entropy
+from .encode import *
 
 
 def create_private_key():

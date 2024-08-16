@@ -1,6 +1,6 @@
 from binascii import unhexlify, hexlify
 
-from tools import *
+from .tools import *
 
 b58_digits = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 

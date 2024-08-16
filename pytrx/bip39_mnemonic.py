@@ -8,8 +8,8 @@ parentPath = os.path.abspath("../..")
 if parentPath not in sys.path:
     sys.path.insert(0, parentPath)
 
-from constants import *
-from hash import *
+from .constants import *
+from .hash import *
 from hashlib import pbkdf2_hmac
 
 

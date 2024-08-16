@@ -9,7 +9,7 @@ from .address import *
 import ecdsa
 import hashlib
 import requests
-from constants import *
+from .constants import *
 
 EIP155_CHAIN_ID_OFFSET = 35
 V_OFFSET = 27
