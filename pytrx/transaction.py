@@ -31,7 +31,7 @@ def safe_ord(value):
 
 
 def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, private_key, chain_id=None):
-    owner_address = to_hex_address(private_key_to_address(private_key))
+    owner_address = normalize_address(private_key_to_address(private_key))
     if chain_id and chain_id in API_BASE_URLS:
         API_BASE_URL = API_BASE_URLS[chain_id]
     else:
@@ -41,7 +41,7 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
         TRC20_METHODS_ENCODED = [contract_method_encode(m) for m in TRC20_METHODS]
         if method in TRC20_METHODS_ENCODED:
                 transaction = {
-                    "contract_address": to_hex_address(to_address),
+                    "contract_address": normalize_address(to_address),
                     "function_selector": TRC20_METHODS[TRC20_METHODS_ENCODED.index(method)],
                     "parameter": data[10:],
                     "fee_limit": 100000000,
@@ -53,7 +53,7 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
             raise Exception("Not implemented method")
     else:
         transaction = {
-            "to_address": to_hex_address(to_address),
+            "to_address": normalize_address(to_address),
             "owner_address": owner_address,
             "amount": value,
             "visible": True
@@ -62,8 +62,7 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
         resp = requests.post(API_BASE_URL + '/wallet/createtransaction', json=transaction)
     payload = resp.json()
     raw_data = bytes.fromhex(payload['raw_data_hex'])
-    raw_priv_key = bytes.fromhex(private_key)
-    priv_key = ecdsa.SigningKey.from_string(raw_priv_key, curve=ecdsa.SECP256k1)
+    priv_key = ecdsa.SigningKey.from_string(private_key, curve=ecdsa.SECP256k1)
     signature = priv_key.sign_deterministic(raw_data, hashfunc=hashlib.sha256)
 
     # recover address to get rec_id
@@ -75,7 +74,7 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
             break
 
     signature += bytes([v])
-    payload["signature"] = signature
+    payload["signature"] = signature.hex()
     return payload
 
 

@@ -10,7 +10,7 @@ def private_key_to_address(privkey):
 
 def public_key_to_address(key):
     pub_key = key.to_string()
-    return b'\x41' + sha3.keccak_256(pub_key)[-20:]
+    return b'\x41' + sha3.keccak_256(pub_key).digest()[-20:]
 
 def to_hex_address(raw_addr) -> str:
     addr = normalize_address(raw_addr)
