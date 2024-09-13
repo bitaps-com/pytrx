@@ -60,8 +60,11 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
         }
 
         resp = requests.post(API_BASE_URL + '/wallet/createtransaction', json=transaction)
-    payload = resp.json()
-    raw_data = bytes.fromhex(payload['raw_data_hex'])
+    try:
+        payload = resp.json()
+        raw_data = bytes.fromhex(payload['raw_data_hex'])
+    except:
+        raise Exception("Invalid createtransaction response: %s" % resp)
     priv_key = ecdsa.SigningKey.from_string(private_key, curve=ecdsa.SECP256k1)
     signature = priv_key.sign_deterministic(raw_data, hashfunc=hashlib.sha256)
 
