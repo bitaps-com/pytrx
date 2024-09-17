@@ -37,18 +37,20 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
     else:
         API_BASE_URL= API_BASE_URLS[MAINNET]
     if data:
-        method = data[0:10]
+        method = data.hex()[0:8]
         TRC20_METHODS_ENCODED = [contract_method_encode(m) for m in TRC20_METHODS]
         if method in TRC20_METHODS_ENCODED:
                 transaction = {
                     "contract_address": normalize_address(to_address),
                     "function_selector": TRC20_METHODS[TRC20_METHODS_ENCODED.index(method)],
-                    "parameter": data[10:],
+                    "parameter": data.hex()[8:],
                     "fee_limit": 100000000,
                     "call_value": 0,
-                    "owner_address": owner_address
+                    "owner_address": owner_address,
+                    "visible": True
                 }
                 resp = requests.post(API_BASE_URL + '/wallet/triggersmartcontract', json=transaction)
+                payload = resp.json()["transaction"]
         else:
             raise Exception("Not implemented method")
     else:
@@ -60,7 +62,7 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
         }
 
         resp = requests.post(API_BASE_URL + '/wallet/createtransaction', json=transaction)
-    payload = resp.json()
+        payload = resp.json()
     try:
         raw_data = bytes.fromhex(payload['raw_data_hex'])
     except:
@@ -81,10 +83,10 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
     return payload
 
 
-async def contract_method_encode(method):
+def contract_method_encode(method):
     method=method.encode('utf-8')
-    method="0x%s" %sha3.keccak_256(method).hexdigest()
-    return method[0:10]
+    method=sha3.keccak_256(method).hexdigest()
+    return method[0:8]
 
 
 def create_contract(nonce, gasprice, gaslimit, data, private_key, chain_id=None):
