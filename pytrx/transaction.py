@@ -30,12 +30,13 @@ def safe_ord(value):
         return ord(value)
 
 
-def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, private_key, chain_id=None):
+def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, private_key, chain_id=None, API_BASE_URL=None):
     owner_address = normalize_address(private_key_to_address(private_key))
-    if chain_id and chain_id in API_BASE_URLS:
-        API_BASE_URL = API_BASE_URLS[chain_id]
-    else:
-        API_BASE_URL= API_BASE_URLS[MAINNET]
+    if not API_BASE_URL:
+        if chain_id and chain_id in API_BASE_URLS:
+            API_BASE_URL = API_BASE_URLS[chain_id]
+        else:
+            API_BASE_URL= API_BASE_URLS[MAINNET]
     if data:
         method = data.hex()[0:8]
         TRC20_METHODS_ENCODED = [contract_method_encode(m) for m in TRC20_METHODS]
