@@ -39,11 +39,11 @@ def create_transaction(nonce, gasprice, gaslimit, to_address, value, data, priva
             API_BASE_URL= API_BASE_URLS[MAINNET]
     if data:
         method = data.hex()[0:8]
-        TRC20_METHODS_ENCODED = [contract_method_encode(m) for m in TRC20_METHODS]
-        if method in TRC20_METHODS_ENCODED:
+        METHODS_ENCODED = [contract_method_encode(m) for m in METHODS]
+        if method in METHODS_ENCODED:
                 transaction = {
                     "contract_address": normalize_address(to_address),
-                    "function_selector": TRC20_METHODS[TRC20_METHODS_ENCODED.index(method)],
+                    "function_selector": METHODS[METHODS_ENCODED.index(method)],
                     "parameter": data.hex()[8:],
                     "fee_limit": 100000000,
                     "call_value": 0,

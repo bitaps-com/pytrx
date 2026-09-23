@@ -17,5 +17,13 @@ API_BASE_URLS = {MAINNET:'https://api.trongrid.io',
 TRANSFER_METHOD = 'transfer(address,uint256)'
 APPROVE_METHOD = 'approve(address,uint256)'
 TRANSFER_FROM_METHOD = 'transferFrom(address,address,uint256)'
+GET_AMOUNTS_OUT_METHOD = 'getAmountsOut(uint256,address[])'
+SWAP_EXACT_TOKENS_FOR_ETH_METHOD = 'swapExactTokensForETH(uint256,uint256,address[],address,uint256)'
 
-TRC20_METHODS = [TRANSFER_METHOD,APPROVE_METHOD,TRANSFER_FROM_METHOD]
+METHODS = [
+    TRANSFER_METHOD,
+    APPROVE_METHOD,
+    TRANSFER_FROM_METHOD,
+    GET_AMOUNTS_OUT_METHOD,
+    SWAP_EXACT_TOKENS_FOR_ETH_METHOD,
+]
